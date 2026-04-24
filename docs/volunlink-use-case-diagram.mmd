@@ -1,0 +1,121 @@
+---
+title: Volunlink Use Case Diagram
+---
+flowchart LR
+    classDef actor fill:#ffffff,stroke:#333333,stroke-width:1px,color:#111111;
+    classDef usecase fill:#fdfdfd,stroke:#333333,stroke-width:1px,color:#111111;
+
+    Guest["Guest"]:::actor
+    AuthUser["Authenticated User"]:::actor
+    Admin["Admin"]:::actor
+    Volunteer["Volunteer"]:::actor
+    Coordinator["Coordinator"]:::actor
+    Supervisor["Supervisor"]:::actor
+
+    Volunteer -.-> AuthUser
+    Admin -.-> AuthUser
+    Coordinator -.-> AuthUser
+    Supervisor -.-> AuthUser
+
+    subgraph SYS["Volunlink System"]
+        direction TB
+
+        subgraph ACCOUNT["Account and Authentication"]
+            UC_Register([Register account]):::usecase
+            UC_Login([Log in]):::usecase
+            UC_RequestReset([Request password reset]):::usecase
+            UC_ResetPassword([Reset password]):::usecase
+            UC_VerifyEmail([Verify email]):::usecase
+            UC_ManageProfile([Manage profile]):::usecase
+            UC_EditProfile([Edit profile]):::usecase
+            UC_ChangePassword([Change password]):::usecase
+            UC_DeleteAccount([Delete account]):::usecase
+            UC_Logout([Log out]):::usecase
+        end
+
+        subgraph DASH["Dashboards"]
+            UC_AdminDashboard([View admin dashboard]):::usecase
+            UC_CoordinatorDashboard([View coordinator dashboard]):::usecase
+            UC_SupervisorDashboard([View supervisor dashboard]):::usecase
+            UC_VolunteerDashboard([View volunteer dashboard]):::usecase
+        end
+
+        subgraph VOL["Volunteer Area"]
+            UC_ViewAssignedMission([View assigned mission details]):::usecase
+        end
+
+        subgraph ADM["Admin Area"]
+            UC_ManageVolunteers([Manage volunteers]):::usecase
+            UC_SearchVolunteers([Search and filter volunteers]):::usecase
+            UC_EditVolunteer([Edit volunteer]):::usecase
+            UC_DeleteVolunteer([Delete volunteer]):::usecase
+
+            UC_ManageSites([Manage sites]):::usecase
+            UC_CreateSite([Create site]):::usecase
+            UC_EditSite([Edit site]):::usecase
+            UC_DeleteSite([Delete site]):::usecase
+
+            UC_ManageMissions([Manage missions]):::usecase
+            UC_CreateMission([Create mission]):::usecase
+            UC_EditMission([Edit mission]):::usecase
+            UC_DeleteMission([Delete mission]):::usecase
+            UC_AssignVolunteers([Assign volunteers to mission]):::usecase
+
+            UC_ManageAttendance([Manage attendance]):::usecase
+            UC_ViewAttendance([View attendance]):::usecase
+            UC_UpdateAttendance([Update attendance status]):::usecase
+            UC_RecordLate([Record late minutes]):::usecase
+
+            UC_ViewNotifications([View notifications]):::usecase
+            UC_MarkNotificationsRead([Mark notifications as read]):::usecase
+            UC_NotifyVolunteerJoined([Notify when volunteer joins]):::usecase
+            UC_NotifyMissionCreated([Notify when mission is created]):::usecase
+        end
+    end
+
+    Guest --- UC_Register
+    Guest --- UC_Login
+    Guest --- UC_RequestReset
+    Guest --- UC_ResetPassword
+
+    AuthUser --- UC_VerifyEmail
+    AuthUser --- UC_ManageProfile
+    AuthUser --- UC_Logout
+
+    Volunteer --- UC_VolunteerDashboard
+    Volunteer --- UC_ViewAssignedMission
+
+    Admin --- UC_AdminDashboard
+    Admin --- UC_ManageVolunteers
+    Admin --- UC_ManageSites
+    Admin --- UC_ManageMissions
+    Admin --- UC_ManageAttendance
+    Admin --- UC_ViewNotifications
+
+    Coordinator --- UC_CoordinatorDashboard
+    Supervisor --- UC_SupervisorDashboard
+
+    UC_ManageProfile -. includes .-> UC_EditProfile
+    UC_ManageProfile -. includes .-> UC_ChangePassword
+    UC_ManageProfile -. includes .-> UC_DeleteAccount
+
+    UC_ManageVolunteers -. includes .-> UC_SearchVolunteers
+    UC_ManageVolunteers -. includes .-> UC_EditVolunteer
+    UC_ManageVolunteers -. includes .-> UC_DeleteVolunteer
+
+    UC_ManageSites -. includes .-> UC_CreateSite
+    UC_ManageSites -. includes .-> UC_EditSite
+    UC_ManageSites -. includes .-> UC_DeleteSite
+
+    UC_ManageMissions -. includes .-> UC_CreateMission
+    UC_ManageMissions -. includes .-> UC_EditMission
+    UC_ManageMissions -. includes .-> UC_DeleteMission
+    UC_ManageMissions -. includes .-> UC_AssignVolunteers
+
+    UC_ManageAttendance -. includes .-> UC_ViewAttendance
+    UC_ManageAttendance -. includes .-> UC_UpdateAttendance
+    UC_UpdateAttendance -. includes .-> UC_RecordLate
+
+    UC_ViewNotifications -. includes .-> UC_MarkNotificationsRead
+    UC_Register -. triggers .-> UC_NotifyVolunteerJoined
+    UC_CreateMission -. triggers .-> UC_NotifyMissionCreated

@@ -1,0 +1,51 @@
+---
+title: Volunlink Domain Class Diagram
+---
+classDiagram
+    direction LR
+
+    class User {
+        +id
+        +name
+        +email
+        +password
+        +role
+        +phone
+        +city
+        +languages
+        +skills
+        +availability
+        +normalizedRole()
+        +dashboardRouteName()
+        +missions()
+    }
+
+    class Mission {
+        +id
+        +title
+        +description
+        +date
+        +start_time
+        +end_time
+        +location
+        +required_volunteers
+        +volunteers()
+    }
+
+    class MissionAssignment {
+        +id
+        +mission_id
+        +user_id
+        +status
+        +late_minutes
+    }
+
+    class EnsureUserHasRole {
+        +handle()
+    }
+
+    User "1" --> "0..*" MissionAssignment : has
+    Mission "1" --> "0..*" MissionAssignment : has
+    User ..> Mission : missions()
+    Mission ..> User : volunteers()
+    EnsureUserHasRole ..> User : checks role

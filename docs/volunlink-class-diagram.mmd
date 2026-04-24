@@ -1,0 +1,156 @@
+---
+title: Volunlink Class Diagram
+---
+classDiagram
+    direction LR
+
+    class User {
+        +id
+        +name
+        +email
+        +password
+        +role
+        +phone
+        +city
+        +languages
+        +skills
+        +availability
+        +normalizedRole()
+        +dashboardRouteName()
+        +missions()
+        +notifications()
+    }
+
+    class Mission {
+        +id
+        +title
+        +site_id
+        +description
+        +date
+        +start_time
+        +end_time
+        +location
+        +required_volunteers
+        +site()
+        +volunteers()
+        +getDisplayLocationAttribute()
+        +getStatusLabelAttribute()
+    }
+
+    class Site {
+        +id
+        +name
+        +city
+        +type
+        +address
+        +capacity
+        +description
+        +latitude
+        +longitude
+        +missions()
+    }
+
+    class MissionAssignment {
+        +mission_id
+        +user_id
+        +status
+        +late_minutes
+        +created_at
+        +updated_at
+    }
+
+    class NotificationRecord {
+        +id
+        +type
+        +notifiable_type
+        +notifiable_id
+        +data
+        +read_at
+        +created_at
+        +updated_at
+    }
+
+    class RegisteredUserController {
+        +create()
+        +store()
+    }
+
+    class AdminDashboardController {
+        +index()
+    }
+
+    class AdminMissionController {
+        +index()
+        +create()
+        +store()
+        +show()
+        +edit()
+        +update()
+        +destroy()
+        +assign()
+        +assignStore()
+        +storeAssignment()
+    }
+
+    class SiteController {
+        +index()
+        +edit()
+        +store()
+        +update()
+        +destroy()
+    }
+
+    class AttendanceController {
+        +index()
+        +show()
+        +update()
+    }
+
+    class NotificationController {
+        +markAllAsRead()
+    }
+
+    class ProfileController {
+        +edit()
+        +update()
+        +destroy()
+    }
+
+    class VolunteerMissionController {
+        +show()
+    }
+
+    class EnsureUserHasRole {
+        +handle()
+    }
+
+    class VolunteerJoinedNotification {
+        +via()
+        +toArray()
+    }
+
+    class MissionCreatedNotification {
+        +via()
+        +toArray()
+    }
+
+    Site "1" --> "0..*" Mission : hosts
+    User "1" --> "0..*" MissionAssignment : assigned through
+    Mission "1" --> "0..*" MissionAssignment : has assignments
+    User ..> Mission : missions()
+    Mission ..> User : volunteers()
+    User "1" --> "0..*" NotificationRecord : receives
+
+    RegisteredUserController ..> User : creates
+    RegisteredUserController ..> VolunteerJoinedNotification : sends
+    AdminMissionController ..> Mission : manages
+    AdminMissionController ..> Site : selects
+    AdminMissionController ..> MissionCreatedNotification : sends
+    SiteController ..> Site : manages
+    AttendanceController ..> MissionAssignment : updates attendance
+    AdminDashboardController ..> User : reads metrics
+    AdminDashboardController ..> Mission : reads coverage
+    NotificationController ..> NotificationRecord : marks read
+    ProfileController ..> User : updates profile
+    VolunteerMissionController ..> Mission : shows assigned mission
+    EnsureUserHasRole ..> User : checks role
